@@ -1,0 +1,476 @@
+---
+title: "Heart Disease Prediction"
+dataset: Heart Disease UCI
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+owner: Maharsh Suryawala
+created: 1/10/2019
+---
+Introduction:
+It is a well known fact that Heart Diseases are currently the leading cause of death across the globe. The development of a computational system that can predict the presence of heart diseases in patients will significantly reduce the mortality rates and substantially reduce the costs of healthcare. Machine learning is used accross many spheres around the world. Especially it is gaining more popularity in the healthcare industry. Machine learning can play an essential role in predicting presense or absence of a critical disease, for an instance, Heart disease, etc. If such information is predicted well in advance, can provide important insights to the doctors, who can then carry out the treatments of the patients accordingly and efficiently. The following R notebook demonstrates an exploratory data analysis of the popular Heart Disease UCI database. In addition to that, heart disease prediction is carried out using different approaches such as logistic regression, Random Forest and Neural Networks.
+
+Dataset:
+The dataset used in the following R notebook can be found on "http://archive.ics.uci.edu/ml/datasets/heart+disease". Each dataset(cleveland.data, hungarian.data, switzerland.data 7 long-beach-va.data) consisted of 76 attributes but it is recommended to use only 14 for our analysis. In this notebook classifiers were built using one combined dataset and the performance evaluation is carried out using cross-validation techniques. 
+
+Features:
+
+1. Age: Age in years. 
+2. Gender: 1 = male, 0 = female
+3. Cp: Chest Pain Type --> Value 1: Typical Angina, Value 2: Atypical Angina, Value 3: Non-Anginal Pain, Value 4: Asymptomatic
+4. Trestbps: Resting Blood-Pressure (in mm Hg)
+5. Chol: Serum Cholestrol (in mg/dl)
+6. Fbs: Fasting Blood Sugar > 120 mg/dl --> 1 = true, 0 = Flase
+7. Restecg: Resting Electro-cardio-Graph results --> Value 0: Normal, Value 1: Having ST-T wave abnormality, Value 2: showing    probable or definite left ventricular hypertropy by Estes criteria
+8. Thalach: Maximum heart rate achieved in beats per minute (bpm)
+9. Exang: Exercise Induced Angina --> 1 = yes, 0 = no
+10. Oldpeak: ST depression induced by exercise relative to rest
+11. Slope: the slope of the peak exercise ST segment --> Value 1: Unsloping, Value 2: Flat, Value 3: Down-Sloping 
+12. Ca: number of major vessels (0-3) colored by fluoroscopy
+13. Thal: 3 = normal; 6 = fixed defect; 7 = reversible defect
+14. target: two classes and hence a binary classification problem. 
+
+Goal: To predict whether a person has a heart-disease or not.
+```{r}
+#Importing essential libraries
+knitr::opts_chunk$set(echo = TRUE)
+library(broom)
+library(ggthemes)
+library(caret)
+library(bindrcpp)
+library(RColorBrewer)
+library(caTools)
+library(ggplot2)
+library(GGally)
+library(rpart.plot)
+library(rattle)
+library(dplyr)
+library(nnet)
+
+```
+
+Reading the dataset and checking for missing entries
+```{r}
+heartDiseaseData<-read.csv("/home/maharsh/Desktop/DAV/heart-disease-uci/heart.csv")
+#printing the head values
+head(heartDiseaseData)
+sum(is.na(heartDiseaseData))
+colnames(heartDiseaseData)[1]<-"age"
+str(heartDiseaseData)
+```
+
+Data-Preprocessing 
+```{r}
+#Factoring the features
+#Target
+heartDiseaseData$target<-as.factor(heartDiseaseData$target)
+levels(heartDiseaseData$target)[levels(heartDiseaseData$target)==0] <- "Healthy"
+levels(heartDiseaseData$target)[levels(heartDiseaseData$target)==1] <- "Heart Disease"
+#Chest Pain
+heartDiseaseData$cp<-as.factor(heartDiseaseData$cp)
+levels(heartDiseaseData$cp)[levels(heartDiseaseData$cp)==0] <- "Chest Pain Type 0"
+levels(heartDiseaseData$cp)[levels(heartDiseaseData$cp)==1] <- "Chest Pain Type 1"
+levels(heartDiseaseData$cp)[levels(heartDiseaseData$cp)==2] <- "Chest Pain Type 2"
+levels(heartDiseaseData$cp)[levels(heartDiseaseData$cp)==3] <- "Chest Pain Type 3"
+#Sex
+heartDiseaseData$sex<-as.factor(heartDiseaseData$sex)
+levels(heartDiseaseData$sex)[levels(heartDiseaseData$sex)==0] <- "Female"
+levels(heartDiseaseData$sex)[levels(heartDiseaseData$sex)==1] <- "Male"
+#Thalassemia
+heartDiseaseData$thal<-as.factor(heartDiseaseData$thal)
+levels(heartDiseaseData$thal)[levels(heartDiseaseData$thal)==0] <- "No Thalassemia"
+levels(heartDiseaseData$thal)[levels(heartDiseaseData$thal)==1] <- "Normal Thalassemia"
+levels(heartDiseaseData$thal)[levels(heartDiseaseData$thal)==2] <- "Fixed Defect Thalassemia"
+levels(heartDiseaseData$thal)[levels(heartDiseaseData$thal)==3] <- "Reversible Defect Thalassemia"
+#Fasting Blood Sugar
+heartDiseaseData$fbs<-as.factor(heartDiseaseData$fbs)
+levels(heartDiseaseData$fbs)[levels(heartDiseaseData$fbs)==0] <- "Fasting Blood Sugar <= 120"
+levels(heartDiseaseData$fbs)[levels(heartDiseaseData$fbs)==1] <- "Fasting Blood Sugar > 120"
+#Exercise Induced Angina
+heartDiseaseData$exang<-as.factor(heartDiseaseData$exang)
+levels(heartDiseaseData$exang)[levels(heartDiseaseData$exang)==1] <- "Exercise Induced Angina"
+levels(heartDiseaseData$exang)[levels(heartDiseaseData$exang)==0] <- "No Exercise Induced Angina"
+#ECG
+heartDiseaseData$restecg<-as.factor(heartDiseaseData$restecg)
+levels(heartDiseaseData$restecg)[levels(heartDiseaseData$restecg)==0] <- "Rest ECG 0"
+levels(heartDiseaseData$restecg)[levels(heartDiseaseData$restecg)==1] <- "Rest ECG 1"
+levels(heartDiseaseData$restecg)[levels(heartDiseaseData$restecg)==2] <- "Rest ECG 2"
+#ST Slope
+heartDiseaseData$slope<-as.factor(heartDiseaseData$slope)
+levels(heartDiseaseData$slope)[levels(heartDiseaseData$slope)==0] <- "Peak Excercise ST Slope 0"
+levels(heartDiseaseData$slope)[levels(heartDiseaseData$slope)==1] <- "Peak Excercise ST Slope 1"
+levels(heartDiseaseData$slope)[levels(heartDiseaseData$slope)==2] <- "Peak Excercise ST Slope 2"
+
+str(heartDiseaseData)
+```
+
+
+Checking for missing values
+```{r}
+sum(is.na(heartDiseaseData))
+```
+
+Summary of the data
+```{r}
+summary(heartDiseaseData)
+```
+
+Total number of observations of heathy people and people suffering from heart disease. 
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) + 
+  geom_bar(stat="count") + theme_clean()  + 
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) 
+```
+
+Heart diseases among females are higher as compared to males
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~sex, ncol=2,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) 
+```
+
+It can be observed that there is no major difference between the distributions of Rest ECG of healthy people and the ones exhibiting heart diseases.
+
+```{r}
+ggplot(heartDiseaseData,aes(trestbps, fill=target)) + 
+  geom_histogram(aes(y=..density..),breaks=seq(90, 200, by=10), color="grey17") + 
+  geom_density(alpha=.1, fill="black") +
+  facet_wrap(~target, ncol=1,scale="fixed") + 
+  theme_clean()  + 
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) + 
+  xlab("Resting Blood Pressure (in mm Hg on admission to the hospital)") +
+  ylab("Density / Count") +
+  ggtitle("Rest ECG Histogram")
+```
+
+It can be observed that heart disease is uniformly spread out across age. In addtion to that the median age for patients estimated was 56 with youngest and oldest being 29 and 77 respectively. It can be observed from the plots that the median age of the people exhibiting heart diseases is less than the healthy ones. Moreover, it can be observed that the distribution of patients exhibiting heart diseases is slighly skewed. Hence, we can use age as an predictive feature.  
+```{r}
+ggplot(heartDiseaseData,aes(age, fill=target)) + 
+  geom_histogram(aes(y=..density..),breaks=seq(0, 80, by=1), color="grey17") +
+  geom_density(alpha=.1, fill="black")+ facet_wrap(~target, ncol=1,scale="fixed") + 
+  theme_clean()  + scale_fill_manual(values=c("#97BE11","#DC1E0B"))+ xlab("Age") + 
+  ylab("Density / Count") + 
+  ggtitle("Age Histogram")
+```
+
+```{r}
+ggplot(heartDiseaseData,aes(x=target, y=age, fill=target)) + 
+  geom_boxplot() +
+  theme_clean() + 
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) 
+```
+
+
+Additionally, People exhibiting heart diseases generally have higher maximum heart rates as compared to healthy people.
+```{r}
+ggplot(heartDiseaseData,aes(thalach, fill=target)) +
+  geom_histogram(aes(y=..density..),breaks=seq(70, 205, by=10), color="grey17") +
+  geom_density(alpha=.1, fill="black") +
+  facet_wrap(~target, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) +
+  xlab("Maximum Heart Rate Achieved") +
+  ylab("Density / Count") +
+  ggtitle("Max Heart Rate Histogram")
+```
+
+
+Moroever, it can be observed here that majority of the people exhibiting heart diseases have their serum cholestrol in the range of 200 - 300 mg/dl 
+```{r}
+ggplot(heartDiseaseData,aes(chol, fill=target)) +
+  geom_histogram(aes(y=..density..),breaks=seq(100, 600, by=25), color="grey17") +
+  geom_density(alpha=.1, fill="black") +
+  facet_wrap(~target, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) +
+  xlab("Serum Cholestoral in mg/dl") +
+  ylab("Density / Count") +
+  ggtitle("Cholestoral Histogram")
+```
+
+
+Majority of heart diseased patients have ST-Depression of 0.1
+```{r}
+ggplot(heartDiseaseData,aes(oldpeak, fill=target)) +
+  geom_histogram(aes(y=..density..),breaks=seq(0, 7, by=0.1), color="grey17") +
+  geom_density(alpha=.1, fill="black") +
+  facet_wrap(~target, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) +
+  ggtitle("ST Depression Histogram") +
+  xlab("ST Depression Induced by Exercise Relative to Rest") +
+  ylab("Density / Count")
+```
+
+Most of the people who have 0-Major vessels are suffering from heart diseases
+```{r}
+ggplot(heartDiseaseData,aes(ca, fill=target)) +
+  geom_histogram(aes(y=..density..),breaks=seq(0, 5, by=1), color="grey17") +
+  geom_density(alpha=.1, fill="black") +
+  facet_wrap(~target, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) +
+  ggtitle("No. Major Vessels Histogram") +
+  xlab("Number of Major Vessels (0-3) Colored by Flourosopy") +
+  ylab("Density / Count")
+```
+
+Majority of people suffering from heart diseases have chest pains of type 1 or 2. 
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~cp, ncol=2,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) 
+```
+
+No major difference in fasting blood sugar
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~fbs, ncol=2,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B")) 
+```
+
+People having Rest ECG-1 have a higher probability of suffering from heart diseases
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~restecg, ncol=3,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B"))
+```
+
+People with No exercise induced angina have a higher probability of getting heart diseases
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~exang, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B"))
+```
+
+People with Peak Exercise slope 2 have a higher probability of exhibiting heart diseases 
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~slope, ncol=1,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B"))
+```
+
+People with fixed defect Thalassemia have a higher probability to suffer from heart diseases
+```{r}
+ggplot(heartDiseaseData,aes(target, fill=target)) +
+  geom_bar(stat="count") +
+  facet_wrap(~thal, ncol=2,scale="fixed") +
+  theme_clean() +
+  scale_fill_manual(values=c("#97BE11","#DC1E0B"))
+```
+
+It can be observed that only a few parameters such as Chest pain type, Gender, Exercise induced angina, Number of vessels, and ST depression have a significant effect. Hence, dropping other parameters
+```{r}
+log<-glm(target~., data=heartDiseaseData, family=binomial)
+summary(log)
+```
+
+Summary of the significant features
+```{r}
+d<-heartDiseaseData[,c(2,3,9,10,12,14)]
+summary(d)
+```
+
+Logistic Regression
+```{r}
+log<-glm(target~., data=d, family=binomial)
+summary(log)
+log.df<-tidy(log)
+```
+
+Observations portray that if an individual has the chest pain of type-2 or 3, there is a higher chances of heart diseases. Higher the value of number of blood vessels, exercise induced angina, st-depression and sex male, lower are the chances of heart diseases.  
+```{r}
+log.df %>%
+  mutate(term=reorder(term,estimate)) %>%
+  ggplot( aes(term,estimate, fill=estimate)) +
+  geom_bar(stat="identity") +
+  scale_fill_gradient(low = "#97BE11",high = "#DC1E0B") +
+  theme_clean() +
+  geom_hline(yintercept=0) +
+  coord_flip()
+```
+
+As the value of oldpeak --> ST depression increases, the probability of heart disease decreases
+As the number of blood vessels rises, the probability of heart disease in females decreses, while it increases for males
+Logistic Regression
+```{r}
+data<-d
+set.seed(1237)
+train <- sample(nrow(data), .8*nrow(data), replace = FALSE)
+TrainSet <- data[train,]
+ValidSet <- data[-train,]
+
+#Tuning parameters
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 10,
+                           repeats = 10,
+                           classProbs = TRUE,
+                           summaryFunction = twoClassSummary)
+
+
+
+TrainSet$target<-make.names(TrainSet$target)
+set.seed(142)
+TrainSet$target<-as.factor(TrainSet$target)
+```
+
+```{r}
+gbm.ada.1 <- caret::train(target ~ ., 
+                                      data = TrainSet ,
+                                      method = "glm", 
+                                      trControl = fitControl,
+                                      metric="ROC")
+
+gbm.ada.1
+```
+
+ST Depression is the most significant feature followed by chest paint type - 2 and so on
+```{r}
+varImp(gbm.ada.1)
+```
+
+```{r}
+pred <- predict(gbm.ada.1,ValidSet)
+levels(pred)[2] <- "Heart Disease"
+t<-table(pred, ValidSet$target)
+t.df<-as.data.frame(t)
+
+res<-caret::confusionMatrix(t, positive="Heart Disease")
+res
+```
+Confusion Matrix
+```{r}
+ggplot(data = t.df, aes(x = Var2, y = pred, label=Freq)) +
+  geom_tile(aes(fill = Freq)) +
+  scale_fill_gradient(low="#97BE11",high="#DC1E0B") +
+  theme_clean() +
+  xlab("Actual Heart Disease") +
+  ylab("Predicted Heart Disease") +
+  geom_text(size=8) +
+  ggtitle("Logistic Regression")
+```
+Random Forest
+```{r}
+gbm.ada.1 <- caret::train(target ~ ., 
+                                      data = TrainSet ,
+                                      method = "rf", 
+                                      trControl = fitControl,
+                                      metric="ROC")
+
+gbm.ada.1
+```
+
+Feature Importance
+```{r}
+varImp(gbm.ada.1)
+```
+
+```{r}
+
+pred <- predict(gbm.ada.1,ValidSet)
+levels(pred)[2] <- "Heart Disease"
+t<-table(ValidSet$target, pred)
+t.df<-as.data.frame(t)
+res<-caret::confusionMatrix(t, positive="Heart Disease")
+res
+```
+Confusion Matrix
+```{r}
+ggplot(data = t.df, aes(x = Var1, y = pred, label=Freq)) +
+  geom_tile(aes(fill = Freq)) +
+  scale_fill_gradient(low = "#97BE11",high = "#DC1E0B") +
+  theme_clean() +
+  xlab("Actual Heart Disease") +
+  ylab("Predicted Heart Disease") +
+  geom_text(size=8) +
+  ggtitle("Random Forest")
+```
+
+Plotting Decision Tree
+```{r}
+gbmGrid <-  expand.grid(cp=c(0.01))
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 10,
+                           repeats = 10,
+                           classProbs = TRUE,
+                           summaryFunction = twoClassSummary)
+d$target<-make.names(d$target)
+system.time(gbm.ada.1 <- caret::train(target ~ ., 
+                                      data = d ,
+                                      method = "rpart", 
+                                      trControl = fitControl,
+                                      metric="ROC",
+                                      tuneGrid=gbmGrid))
+
+
+gbm.ada.1
+```
+
+```{r}
+varImp(gbm.ada.1)
+```
+
+```{r}
+rpart.plot(gbm.ada.1$finalModel,   
+           type=5,
+           fallen.leaves = FALSE,
+           box.palette = "GnRd",
+           nn=TRUE)
+```
+Neural Network
+```{r}
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 10,
+                           repeats = 10,
+                           classProbs = TRUE,
+                           summaryFunction = twoClassSummary)
+gbm.ada.1 <- caret::train(target ~ ., 
+                                      data = TrainSet ,
+                                      method = "nnet", 
+                                      trControl = fitControl,
+                                      metric="ROC")
+
+```
+
+```{r}
+gbm.ada.1
+```
+Variable importance
+```{r}
+varImp(gbm.ada.1)
+```
+
+```{r}
+pred <- predict(gbm.ada.1,ValidSet)
+levels(pred)[2] <- "Heart Disease"
+t<-table(ValidSet$target, pred)
+t.df<-as.data.frame(t)
+res<-caret::confusionMatrix(t, positive="Heart Disease")
+res
+```
+
+Confusion Matrix
+```{r}
+ggplot(data = t.df, aes(x = Var1, y = pred, label=Freq)) +
+  geom_tile(aes(fill = Freq)) +
+  scale_fill_gradient(low = "#97BE11",high = "#DC1E0B") +
+  theme_clean() +
+  xlab("Actual Heart Disease") +
+  ylab("Predicted Heart Disease") +
+  geom_text(size=8) +
+  ggtitle("Neural Network")
+```
+
