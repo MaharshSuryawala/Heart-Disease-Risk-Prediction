@@ -52,7 +52,7 @@ library(nnet)
 
 Reading the dataset and checking for missing entries
 ```{r}
-heartDiseaseData<-read.csv("/home/maharsh/Desktop/DAV/heart-disease-uci/heart.csv")
+heartDiseaseData<-read.csv("heart.csv")
 #printing the head values
 head(heartDiseaseData)
 sum(is.na(heartDiseaseData))
