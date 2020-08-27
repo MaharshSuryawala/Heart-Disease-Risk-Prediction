@@ -17,7 +17,7 @@
 
 * The development of a computational system that can predict the presence of heart diseases will significantly reduce the mortality rates & substantially reduce the costs of health care.
 
-* Such information is predicted well in advance, can provide important insights to doctors.
+* Such information predicted well in advance, can provide important insights to doctors.
 
 * For more information regarding this project. - [Click here.](https://maharshsuryawala.github.io/Heart-Disease-Risk-Prediction/)
 
@@ -55,48 +55,48 @@ Moreover, it can be observed here that majority of the people exhibiting heart d
 
 People exhibiting heart diseases generally have higher maximum heart rates as compared to health people.  
 
-![5](.images/5.png)
+![6](.images/6.png)
 
 Majority of heart diseased patients have ST-Depression of 0.1
 
-![6](.images/6.png)
+![7](.images/7.png)
 
 Most of the people who have 0-Major vessels are suffering from heart diseases
 
-![7](.images/7.png)
+![8](.images/8.png)
 
 Heart diseases among females are higher as compared to males. 
 
-![8](.images/8.png)
+![9](.images/9.png)
 
 Majority of people suffering from heart-diseases have chest pain of type 1 or 2. 
 
-![9](.images/9.png)
+![10](.images/10.png)
 
 No major difference in fasting blood sugar. 
 
-![10](.images/10.png)
+![11](.images/11.png)
 
 People having Rest ECG-1 have a higher probability of suffering from heart diseases.
 
-![11](.images11.png)
+![12](.images/12.png)
 
 People with No exercise induced angina have a higher probability of getting heart diseases.
 
-![12](.images/12.png)
+![13](.images/13.png)
 
 People with Peak Exercise slope 2 have a higher probability of exhibiting heart diseases.
 
-![13](.images/13.png)
+![14](.images/14.png)
 
 People with 
 fixed defect Thalassemia have a higher probability to suffer from heart diseases
 
-![14](.images/14.png)
+![15](.images/15.png)
 
 It can be observed that only a few parameters such as Chest pain type, Gender, Exercise induced angina, Number of vessels, and ST depression have a significant effect. Hence, dropping other parameters
 
-![15](.images/15.png)
+![16](.images/16.png)
 
 ## Results
 
@@ -105,28 +105,28 @@ It can be observed that only a few parameters such as Chest pain type, Gender, E
   * Sensitivity: 84.77%
   * Specificity: 72%
 
-![16](.images/16.png)
+![17](.images/17.png)
 
 * Random Forest 
   * Accuracy: 89.76%
   * Sensitivity: 85.59%
   * Specificity: 95.4%
 
-![17](.images/17.png)
+![18](.images/18.png)
 
 * Neural Network 
   * Accuracy: 81.95%
   * Sensitivity: 76.98%
   * Specificity: 89.87%
 
-![18](.images/18.png)
+![19](.images/19.png)
 
 * Decision Tree 
   * Accuracy: 86.65%
   * Sensitivity: 81.4%
   * Specificity: 87.56%
 
-![19](.images/19.png)
+![20](.images/20.png)
 
 
 <!-- CONTRIBUTING -->
@@ -151,7 +151,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Maharsh Suryawala - [Portfolio](https://maharshsuryawala.github.io/maharshsuryawala/)
 
-Project Link: [https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS](https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS)
+Project Link: [https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS](https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction)
 
 
 
