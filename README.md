@@ -9,9 +9,9 @@
 
 ## Overview
 
-![Heart](.images/heart.png)
+![Heart](.images/heart.jpg)
 
-<span>Photo by <a href="https://unsplash.com/@alexacea?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Alexandru Acea</a> on <a href="https://unsplash.com/s/photos/heart?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+<span>Photo by <a href="https://unsplash.com/@jessedo81?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">jesse orrico</a> on <a href="https://unsplash.com/s/photos/heart?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
 
 * It is a well-known fact that Heart Diseases are currently the leading cause of death across the world. 
 
