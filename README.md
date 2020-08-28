@@ -37,7 +37,7 @@
 
 * For more information regarding this project. - [Click here.](https://maharshsuryawala.github.io/Heart-Disease-Risk-Prediction/)
 
-### Build With
+### Built With
 
 * [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html)
 * [R](https://www.r-project.org/)
