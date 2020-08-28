@@ -7,11 +7,27 @@
 [![MIT License][license-shield]][license-url]
 [![Open Source? Yes!](https://badgen.net/badge/Open%20Source%20%3F/Yes%21/blue?icon=github)](https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS)
 
-## Overview
+<!-- TABLE OF CONTENTS -->
+## Table of Contents
+
+* [About the Project](#about-the-project)
+  * [Overview](#overview)
+  * [Built With](#built-with)
+  * [Dataset](#dataset)
+* [Inferences derived from Exploratory Data Analysis.](#inferences-derived-from-exploratory-data-analysis)
+* [Results](#results)
+* [Contributing](#contributing)
+* [License](#license)
+* [Contact](#contact)
+* [Acknowledgements](#acknowledgements)
+
+## About the Project
 
 ![Heart](.images/heart.jpg)
 
 <span>Photo by <a href="https://unsplash.com/@jessedo81?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">jesse orrico</a> on <a href="https://unsplash.com/s/photos/heart?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+
+### Overview
 
 * It is a well-known fact that Heart Diseases are currently the leading cause of death across the world. 
 
@@ -21,7 +37,12 @@
 
 * For more information regarding this project. - [Click here.](https://maharshsuryawala.github.io/Heart-Disease-Risk-Prediction/)
 
-## Dataset
+### Build With
+
+* [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html)
+* [R](https://www.r-project.org/)
+
+### Dataset
 
 Source: [UCI Heart Disease Dataset](https://archive.ics.uci.edu/ml/datasets/Heart+Disease)
   
@@ -172,6 +193,6 @@ Project Link: [https://github.com/MaharshSuryawala/Microprocessor-Without-Interl
 <!-- MARKDOWN LINKS -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS?style=flat-square 
-[contributors-url]: https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS/graphs/contributors
+[contributors-url]: https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction/graphs/contributors
 [license-shield]: https://img.shields.io/github/license/MaharshSuryawala/Heart-Disease-Risk-Prediction?style=flat-square?style=flat-square
 [license-url]: https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction?style=flat-square/blob/master/LICENSE.txt
