@@ -172,7 +172,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Maharsh Suryawala - [Portfolio](https://maharshsuryawala.github.io/maharshsuryawala/)
 
-Project Link: [https://github.com/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS](https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction)
+Project Link: [https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction](https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction)
 
 
 
@@ -192,7 +192,7 @@ Project Link: [https://github.com/MaharshSuryawala/Microprocessor-Without-Interl
 
 <!-- MARKDOWN LINKS -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/MaharshSuryawala/Microprocessor-Without-Interlocked-Pipeline-Stages-MIPS?style=flat-square 
+[contributors-shield]: https://img.shields.io/github/contributors/MaharshSuryawala/Heart-Disease-Risk-Prediction?style=flat-square 
 [contributors-url]: https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction/graphs/contributors
 [license-shield]: https://img.shields.io/github/license/MaharshSuryawala/Heart-Disease-Risk-Prediction?style=flat-square?style=flat-square
 [license-url]: https://github.com/MaharshSuryawala/Heart-Disease-Risk-Prediction?style=flat-square/blob/master/LICENSE.txt
